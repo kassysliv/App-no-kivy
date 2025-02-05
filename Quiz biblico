@@ -9,34 +9,35 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 import random
 
-class StartScreen(Screen):
+
+class StartScreen(Screen): # Tela inicial onde o usuário seleciona a dificuldade e começa o quiz
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         layout = BoxLayout(orientation='vertical', padding=20, spacing=20)
 
-        title = Label(
+        title = Label( #titulo
             text="[b]Bem-vindo ao Quiz Bíblico![/color][/b]",
             font_size=32,
             markup=True,
             halign="center",
-            color= (1, 1, 1, 1)
+            color=(1, 1, 1, 1)
         )
 
-        subtitle = Label(
+        subtitle = Label( #subtítulo
             text="[i]Teste seus conhecimentos sobre a Bíblia![/i]",
             font_size=18,
             markup=True,
             color=(1, 1, 1, 1)
         )
 
-        self.difficulty_spinner = Spinner(
+        self.difficulty_spinner = Spinner( # spinner para selecionar a dificuldade, o usuário que escolhe
             text='Selecione a dificuldade',
             values=('Fácil', 'Médio', 'Difícil'),
             size_hint=(1, 0.3),
             background_color=(0, 0, 1, 1)
         )
 
-        start_button = Button(
+        start_button = Button( # botão para começar o quiz
             text="Começar",
             font_size=24,
             size_hint=(1, 0.3),
@@ -44,19 +45,20 @@ class StartScreen(Screen):
         )
         start_button.bind(on_press=self.start_quiz)
 
-        layout.add_widget(title)
+        layout.add_widget(title) #adicionar os widgets ao layout
         layout.add_widget(subtitle)
         layout.add_widget(self.difficulty_spinner)
         layout.add_widget(start_button)
         self.add_widget(layout)
 
-    def start_quiz(self, instance):
-        selected_difficulty = self.difficulty_spinner.text
+    def start_quiz(self, instance): #função chamada quando o botão começar
+        selected_difficulty = self.difficulty_spinner.text#starquiz e um botão chamado de começar
         if selected_difficulty != 'Selecione a dificuldade':
             self.manager.current = 'quiz'
             self.manager.get_screen('quiz').set_difficulty(selected_difficulty)
 
-class QuizScreen(Screen):
+
+class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde ás perguntas do quiz.
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.score = 0
@@ -65,24 +67,36 @@ class QuizScreen(Screen):
         self.timer_event = None
         self.hint_used = 0
 
-        self.easy_questions = [
+        self.easy_questions = [ #perguntas fáceis
             {"question": "Quantos dias Deus levou para criar o mundo?", "options": ["3", "5", "6", "7"], "answer": "6"},
-            {"question": "Quem construiu a arca para salvar sua família e os animais do dilúvio?", "options": ["Adão", "Moisés", "Noé", "Abraão"], "answer": "Noé"},
-            {"question": "Quem foi o primeiro rei de Israel?", "options": ["Saul", "Davi", "Salomão", "Ezequias"], "answer": "Saul"},
-            {"question": "Quem foi o líder do povo de Israel após Moisés?", "options": ["Josué", "Samuel", "Eli", "Davi"], "answer": "Josué"},
-            {"question": "Quem foi o maior profeta de Israel?", "options": ["Isaías", "Elías", "Jeremias", "Amós"], "answer": "Isaías"},
-            {"question": "Em que cidade Jesus nasceu?", "options": ["Belém", "Nazaré", "Jerusalém", "Cafarnaum"], "answer": "Belém"},
-            {"question": "Qual foi o primeiro milagre de Jesus?", "options": ["Curar o cego", "Transformar água em vinho", "Curar o paralítico", "Expulsar os demônios"], "answer": "Transformar água em vinho"},
+            {"question": "Quem construiu a arca para salvar sua família e os animais do dilúvio?",
+             "options": ["Adão", "Moisés", "Noé", "Abraão"], "answer": "Noé"},
+            {"question": "Quem foi o primeiro rei de Israel?", "options": ["Saul", "Davi", "Salomão", "Ezequias"],
+             "answer": "Saul"},
+            {"question": "Quem foi o líder do povo de Israel após Moisés?",
+             "options": ["Josué", "Samuel", "Eli", "Davi"], "answer": "Josué"},
+            {"question": "Quem foi o maior profeta de Israel?", "options": ["Isaías", "Elías", "Jeremias", "Amós"],
+             "answer": "Isaías"},
+            {"question": "Em que cidade Jesus nasceu?", "options": ["Belém", "Nazaré", "Jerusalém", "Cafarnaum"],
+             "answer": "Belém"},
+            {"question": "Qual foi o primeiro milagre de Jesus?",
+             "options": ["Curar o cego", "Transformar água em vinho", "Curar o paralítico", "Expulsar os demônios"],
+             "answer": "Transformar água em vinho"},
             {"question": "Quem traiu Jesus?", "options": ["Pedro", "Tiago", "Judas", "Mateus"], "answer": "Judas"},
-            {"question": "Quem negou Jesus três vezes?", "options": ["Pedro", "João", "André", "Filipe"], "answer": "Pedro"},
-            {"question": "Quem derrotou os filisteus com uma queixada de jumento?", "options": ["Sansão", "Davi", "Gideão", "Saul"], "answer": "Sansão"},
-            {"question": "Quem foi o pai de muitos filhos, incluindo Ismael e Isaque?", "options": ["Abraão", "Jacó", "Esaú", "Noé"], "answer": "Abraão"},
-            {"question": "Quem foi a mãe de João Batista?", "options": ["Maria", "Ana", "Isabel", "Marta"], "answer": "Isabel"},
+            {"question": "Quem negou Jesus três vezes?", "options": ["Pedro", "João", "André", "Filipe"],
+             "answer": "Pedro"},
+            {"question": "Quem derrotou os filisteus com uma queixada de jumento?",
+             "options": ["Sansão", "Davi", "Gideão", "Saul"], "answer": "Sansão"},
+            {"question": "Quem foi o pai de muitos filhos, incluindo Ismael e Isaque?",
+             "options": ["Abraão", "Jacó", "Esaú", "Noé"], "answer": "Abraão"},
+            {"question": "Quem foi a mãe de João Batista?", "options": ["Maria", "Ana", "Isabel", "Marta"],
+             "answer": "Isabel"},
             {"question": "Quem recebeu os Dez Mandamentos?", "options": ["Moisés", "Abraão", "Davi", "Salomão"],
              "answer": "Moisés"},
             {"question": "Quem matou um gigante com uma pedra?", "options": ["Davi", "Sansão", "Saul", "Josué"],
              "answer": "Davi"},
-            {"question": "Quem foi a esposa de Adão?", "options": ["Eva", "Sara", "Rebeca", "Raquel"], "answer": "Eva"},
+            {"question": "Quem foi engolido por um grande peixe?", "options": ["Moisés", "Jonas", "José", "Davi"],
+             "answer": "Jonas"},
             {"question": "Quem foi a mãe de Samuel?", "options": ["Ana", "Sara", "Raquel", "Rebeca"], "answer": "Ana"},
             {"question": "Quem foi o irmão gêmeo de Esaú?", "options": ["Jacó", "José", "Isaac", "Abraão"],
              "answer": "Jacó"},
@@ -95,37 +109,78 @@ class QuizScreen(Screen):
             {"question": "Quem deu a Jesus ouro, incenso e mirra?",
              "options": ["Os três magos", "Os pastores", "Os discípulos", "Os fariseus"], "answer": "Os três magos"},
             {"question": "Quem foi vendido como escravo pelos próprios irmãos?",
-                 "options": ["José", "Isaac", "Moisés", "Davi"], "answer": "José"},
+             "options": ["José", "Isaac", "Moisés", "Davi"], "answer": "José"},
             {"question": "Quem foi chamado por Deus para liderar os israelitas para fora do Egito?",
-                 "options": ["Moisés", "Abraão", "Jacó", "José"], "answer": "Moisés"},
+             "options": ["Moisés", "Abraão", "Jacó", "José"], "answer": "Moisés"},
             {"question": "Quem foi a esposa de Jacó que ele amava muito?",
-                 "options": ["Raquel", "Lia", "Sara", "Rebeca"], "answer": "Raquel"},
+             "options": ["Raquel", "Lia", "Sara", "Rebeca"], "answer": "Raquel"},
             {"question": "Quem foi o homem mais velho mencionado na Bíblia?",
              "options": ["Matusalém", "Noé", "Abraão", "Moisés"], "answer": "Matusalém"},
             {"question": "Quem foi lançada em um cesto no rio Nilo?", "options": ["Moisés", "José", "Davi", "Daniel"],
-             "answer": "Moisés"},  {"question": "Qual era a profissão de Davi antes de se tornar rei?", "options": ["Pastor de ovelhas", "Ferreiro", "Carpinteiro", "Pescador"], "answer": "Pastor de ovelhas"},
-            {"question": "Quem foi o homem que teve sua força em seus cabelos?", "options": ["Sansão", "Davi", "Golias", "Saul"], "answer": "Sansão"},
+             "answer": "Moisés"}, {"question": "Qual era a profissão de Davi antes de se tornar rei?",
+                                   "options": ["Pastor de ovelhas", "Ferreiro", "Carpinteiro", "Pescador"],
+                                   "answer": "Pastor de ovelhas"},
+            {"question": "Quem foi o homem que teve sua força em seus cabelos?",
+             "options": ["Sansão", "Davi", "Golias", "Saul"], "answer": "Sansão"},
             {"question": "Quem foi o pai de Isaque?", "options": ["Abraão", "Jacó", "Esaú", "José"],
              "answer": "Abraão"},
             {"question": "Quem foi a esposa de Adão?", "options": ["Eva", "Sara", "Rebeca", "Raquel"], "answer": "Eva"},
 
-
-
         ]
 
-        self.medium_questions = [
-            {"question": "Qual discípulo escreveu o Livro de Apocalipse?", "options": ["Paulo", "João", "Mateus", "Lucas"], "answer": "João"},
-            {"question": "Qual é o maior mandamento segundo Jesus?", "options": ["Amar a Deus sobre todas as coisas", "Amar ao próximo como a si mesmo", "Não matar", "Não adulterar"], "answer": "Amar a Deus sobre todas as coisas"},
-            {"question": "Quem foi o profeta que desafiou os profetas de Baal no Monte Carmelo?", "options": ["Elías", "Isaías", "Amós", "Jeremias"], "answer": "Elías"},
-            {"question": "Qual rei mandou construir o Templo de Jerusalém?", "options": ["Salomão", "Davi", "Ezequias", "Manassés"], "answer": "Salomão"},
-            {"question": "Quem foi o líder de Israel que lutou contra os amalecitas?", "options": ["Josué", "Saul", "Davi", "Moisés"], "answer": "Josué"},
-            {"question": "Quantos dias Jesus ficou no deserto sendo tentado?", "options": ["30", "40", "50", "60"], "answer": "40"},
-            {"question": "Qual o nome do irmão de Moisés?", "options": ["Arão", "Davi", "José", "Abraão"], "answer": "Arão"},
-            {"question": "Quem foi a esposa de Abraão?", "options": ["Sara", "Rebeca", "Raquel", "Lea"], "answer": "Sara"},
-            {"question": "Qual era a profissão de Zaqueu antes de encontrar Jesus?", "options": ["Pescador", "Pastor", "Cobrador de impostos", "Carpinteiro"], "answer": "Cobrador de impostos"},
-            {"question": "Quem era o rei de Israel quando o reino foi dividido em Israel e Judá?", "options": ["Saul", "Davi", "Salomão", "Roboão"], "answer": "Roboão"},
-            {"question": "Quem foi o pai de Samuel, o profeta?", "options": ["Eli", "Amós", "Elcana", "Davi"], "answer": "Elcana"},
-            {"question": "Qual é o menor livro do Novo Testamento?", "options": ["Filemom", "2 João", "3 João", "Judas"], "answer": "2 João"},
+        self.medium_questions = [ #perguntas médias
+            {"question": "Qual discípulo escreveu o Livro de Apocalipse?",
+             "options": ["Paulo", "João", "Mateus", "Lucas"], "answer": "João"},
+            {"question": "Qual é o maior mandamento segundo Jesus?",
+             "options": ["Amar a Deus sobre todas as coisas", "Amar ao próximo como a si mesmo", "Não matar",
+                         "Não adulterar"], "answer": "Amar a Deus sobre todas as coisas"},
+            {"question": "Qual rei mandou construir o Templo de Jerusalém?",
+             "options": ["Salomão", "Davi", "Ezequias", "Manassés"], "answer": "Salomão"},
+            {"question": "Quem foi o líder de Israel que lutou contra os amalecitas?",
+             "options": ["Josué", "Saul", "Davi", "Moisés"], "answer": "Josué"},
+            {"question": "Quantos dias Jesus ficou no deserto sendo tentado?", "options": ["30", "40", "50", "60"],
+             "answer": "40"},
+            {"question": "Qual o nome do irmão de Moisés?", "options": ["Arão", "Davi", "José", "Abraão"],
+             "answer": "Arão"},
+            {"question": "Quem foi a esposa de Abraão?", "options": ["Sara", "Rebeca", "Raquel", "Lea"],
+             "answer": "Sara"},
+            {"question": "Qual era a profissão de Zaqueu antes de encontrar Jesus?",
+             "options": ["Pescador", "Pastor", "Cobrador de impostos", "Carpinteiro"],
+             "answer": "Cobrador de impostos"},
+            {"question": "Quem era o rei de Israel quando o reino foi dividido em Israel e Judá?",
+             "options": ["Saul", "Davi", "Salomão", "Roboão"], "answer": "Roboão"},
+            {"question": "Quem foi o pai de Samuel, o profeta?", "options": ["Eli", "Amós", "Elcana", "Davi"],
+             "answer": "Elcana"},
+            {"question": "Qual é o menor livro do Novo Testamento?",
+             "options": ["Filemom", "2 João", "3 João", "Judas"], "answer": "2 João"},
+            {"question": "Quem foi o primeiro sumo sacerdote de Israel?", "options": ["Arão", "Moisés", "Josué", "Eli"],
+             "answer": "Arão"},
+            {"question": "Qual discípulo escreveu o Livro de Apocalipse?",
+             "options": ["Paulo", "João", "Mateus", "Lucas"], "answer": "João"},
+            {"question": "Qual é o maior mandamento segundo Jesus?",
+             "options": ["Amar a Deus sobre todas as coisas", "Amar ao próximo como a si mesmo", "Não matar",
+                         "Não adulterar"], "answer": "Amar a Deus sobre todas as coisas"},
+            {"question": "Quem foi o profeta que desafiou os profetas de Baal no Monte Carmelo?",
+             "options": ["Elías", "Isaías", "Amós", "Jeremias"], "answer": "Elías"},
+            {"question": "Qual rei mandou construir o Templo de Jerusalém?",
+             "options": ["Salomão", "Davi", "Ezequias", "Manassés"], "answer": "Salomão"},
+            {"question": "Quem foi o líder de Israel que lutou contra os amalecitas?",
+             "options": ["Josué", "Saul", "Davi", "Moisés"], "answer": "Josué"},
+            {"question": "Quantos dias Jesus ficou no deserto sendo tentado?", "options": ["30", "40", "50", "60"],
+             "answer": "40"},
+            {"question": "Qual o nome do irmão de Moisés?", "options": ["Arão", "Davi", "José", "Abraão"],
+             "answer": "Arão"},
+            {"question": "Quem foi a esposa de Abraão?", "options": ["Sara", "Rebeca", "Raquel", "Lea"],
+             "answer": "Sara"},
+            {"question": "Qual era a profissão de Zaqueu antes de encontrar Jesus?",
+             "options": ["Pescador", "Pastor", "Cobrador de impostos", "Carpinteiro"],
+             "answer": "Cobrador de impostos"},
+            {"question": "Quem era o rei de Israel quando o reino foi dividido em Israel e Judá?",
+             "options": ["Saul", "Davi", "Salomão", "Roboão"], "answer": "Roboão"},
+            {"question": "Quem foi o pai de Samuel, o profeta?", "options": ["Eli", "Amós", "Elcana", "Davi"],
+             "answer": "Elcana"},
+            {"question": "Qual é o menor livro do Novo Testamento?",
+             "options": ["Filemom", "2 João", "3 João", "Judas"], "answer": "2 João"},
             {"question": "Quem foi o primeiro sumo sacerdote de Israel?", "options": ["Arão", "Moisés", "Josué", "Eli"],
              "answer": "Arão"},
             {"question": "Quem foi o pai de Samuel, o profeta?", "options": ["Elcana", "Eli", "Davi", "Saul"],
@@ -163,11 +218,45 @@ class QuizScreen(Screen):
              "answer": "O orvalho no velo"},
             {"question": "Quem foi o profeta que enfrentou os profetas de Baal no Monte Carmelo?",
              "options": ["Elias", "Eliseu", "Jeremias", "Isaías"], "answer": "Elias"},
-
+            {"question": "Quem foi o pai de Samuel, o profeta?", "options": ["Elcana", "Eli", "Davi", "Saul"],
+             "answer": "Elcana"},
+            {"question": "Quem interpretou o sonho de Faraó sobre sete vacas gordas e sete vacas magras?",
+             "options": ["José", "Daniel", "Moisés", "Abraão"], "answer": "José"},
+            {"question": "Qual foi o nome original de Abraão?", "options": ["Abrão", "Noé", "Jacó", "Isaque"],
+             "answer": "Abrão"},
+            {"question": "Quantas pragas Deus enviou ao Egito?", "options": ["7", "10", "12", "5"], "answer": "10"},
+            {"question": "Qual era o nome do jardim onde Adão e Eva viviam?",
+             "options": ["Éden", "Getsemani", "Hebrom", "Jerusalém"], "answer": "Éden"},
+            {"question": "Qual foi a primeira cidade conquistada pelos israelitas na Terra Prometida?",
+             "options": ["Jericó", "Ai", "Hebrom", "Betel"], "answer": "Jericó"},
+            {"question": "Quem foi o profeta que confrontou o rei Davi sobre seu pecado com Bate-Seba?",
+             "options": ["Natã", "Isaías", "Jeremias", "Ezequiel"], "answer": "Natã"},
+            {"question": "Quem foi a rainha que salvou seu povo da destruição?",
+             "options": ["Ester", "Débora", "Rute", "Ana"], "answer": "Ester"},
+            {"question": "Quem foi o profeta que foi levado ao céu em um redemoinho?",
+             "options": ["Elias", "Eliseu", "Isaías", "Jeremias"], "answer": "Elias"},
+            {"question": "Quem foi o profeta que foi engolido por um grande peixe?",
+             "options": ["Jonas", "Elias", "Eliseu", "Isaías"], "answer": "Jonas"},
+            {"question": "Quem foi a primeira mulher a ser chamada de profetisa na Bíblia?",
+             "options": ["Miriam", "Débora", "Hulda", "Ana"], "answer": "Miriam"},
+            {"question": "Qual era a profissão de Mateus antes de seguir Jesus?",
+             "options": ["Cobrador de impostos", "Pescador", "Carpinteiro", "Pastor"],
+             "answer": "Cobrador de impostos"},
+            {"question": "Quantos anos os israelitas vagaram pelo deserto?", "options": ["40", "30", "20", "50"],
+             "answer": "40"},
+            {"question": "Quem foi o sucessor de Moisés?", "options": ["Josué", "Calebe", "Arão", "Eli"],
+             "answer": "Josué"},
+            {"question": "Qual era o nome do filho de Davi que tentou usurpar o trono?",
+             "options": ["Absalão", "Salomão", "Adonias", "Amnon"], "answer": "Absalão"},
+            {"question": "Qual foi o sinal que Deus deu a Gideão para mostrar que Ele estava com ele?",
+             "options": ["O orvalho no velo", "A sarça ardente", "A vara transformada em serpente", "O rio se dividiu"],
+             "answer": "O orvalho no velo"},
+            {"question": "Quem foi o profeta que enfrentou os profetas de Baal no Monte Carmelo?",
+             "options": ["Elias", "Eliseu", "Jeremias", "Isaías"], "answer": "Elias"},
 
         ]
 
-        self.hard_questions = [
+        self.hard_questions = [ #perguntas difíceis
             {"question": "Qual foi o nome do homem que ajudou Jesus a carregar a cruz?",
              "options": ["Simão de Cirene", "José de Arimateia", "Nicodemos", "Pedro"], "answer": "Simão de Cirene"},
             {"question": "Quantos salmos são atribuídos a Davi?", "options": ["73", "100", "50", "150"],
@@ -178,70 +267,86 @@ class QuizScreen(Screen):
              "options": ["Ezequias", "Josias", "Amazias", "Manassés"], "answer": "Ezequias"},
             {"question": "Qual foi o profeta que casou-se com uma prostituta?",
              "options": ["Oséias", "Isaías", "Amós", "Miquéias"], "answer": "Oséias"},
-            {"question": "Quem foi o profeta que foi levado ao céu em uma carruagem de fogo?", "options": ["Elias", "Eliseu", "Isaías", "Jeremias"], "answer": "Elias"},
-            {"question": "Qual foi o nome da esposa de Zacarias, mãe de João Batista?", "options": ["Maria", "Isabel", "Marta", "Ana"], "answer": "Isabel"},
-            {"question": "Qual apóstolo foi conhecido por duvidar da ressurreição de Jesus até ver as marcas dos cravos?", "options": ["Pedro", "João", "Tomé", "Tiago"], "answer": "Tomé"},
-            {"question": "Em qual cidade Paulo encontrou um altar com a inscrição 'Ao Deus Desconhecido'?", "options": ["Atenas", "Corinto", "Éfeso", "Jerusalém"], "answer": "Atenas"},
-            {"question": "Quem foi o primeiro mártir cristão, apedrejado por sua fé?", "options": ["Tiago", "Paulo", "Estevão", "Pedro"], "answer": "Estevão"},
-            {"question": "Qual foi o nome do homem que substituiu Judas Iscariotes como apóstolo?", "options": ["Matias", "Barnabé", "Silas", "Timóteo"], "answer": "Matias"},
-            {"question": "Em qual livro da Bíblia encontramos o versículo 'Tu conservarás em paz aquele cuja mente está firme em ti, porque ele confia em ti'?",
-            "options": ["Salmos", "Isaías", "Provérbios", "Jeremias"],
-            "answer": "Isaías"},
+            {"question": "Quem foi o profeta que foi levado ao céu em uma carruagem de fogo?",
+             "options": ["Elias", "Eliseu", "Isaías", "Jeremias"], "answer": "Elias"},
+            {"question": "Qual foi o nome da esposa de Zacarias, mãe de João Batista?",
+             "options": ["Maria", "Isabel", "Marta", "Ana"], "answer": "Isabel"},
+            {
+                "question": "Qual apóstolo foi conhecido por duvidar da ressurreição de Jesus até ver as marcas dos cravos?",
+                "options": ["Pedro", "João", "Tomé", "Tiago"], "answer": "Tomé"},
+            {"question": "Em qual cidade Paulo encontrou um altar com a inscrição 'Ao Deus Desconhecido'?",
+             "options": ["Atenas", "Corinto", "Éfeso", "Jerusalém"], "answer": "Atenas"},
+            {"question": "Quem foi o primeiro mártir cristão, apedrejado por sua fé?",
+             "options": ["Tiago", "Paulo", "Estevão", "Pedro"], "answer": "Estevão"},
+            {"question": "Qual foi o nome do homem que substituiu Judas Iscariotes como apóstolo?",
+             "options": ["Matias", "Barnabé", "Silas", "Timóteo"], "answer": "Matias"},
+            {"question": "Qual foi o nome da mãe de Samuel, o profeta?",
+            "options": ["Ana", "Maria", "Sara", "Rebeca"],
+            "answer": "Ana"},
             {"question": "Qual é o versículo mais longo da Bíblia?",
-               "options": ["Ester 8:9", "Salmos 119:1", "Gênesis 1:1", "João 3:16"], "answer": "Ester 8:9"},
+             "options": ["Ester 8:9", "Salmos 119:1", "Gênesis 1:1", "João 3:16"], "answer": "Ester 8:9"},
             {"question": "Quantos capítulos existem no livro de Isaías?", "options": ["50", "66", "72", "40"],
-               "answer": "66"},
+             "answer": "66"},
             {"question": "Quem reinou mais tempo sobre Israel, Davi ou Salomão?", "options": ["Davi", "Salomão"],
-                 "answer": "Davi"},
+             "answer": "Davi"},
             {"question": "Quantos filhos Jacó teve?", "options": ["12", "11", "10", "13"], "answer": "12"},
-             {"question": "Quantos anos durou o cativeiro Babilônico?", "options": ["70", "40", "100", "50"],
-                 "answer": "70"},
+            {"question": "Quantos anos durou o cativeiro Babilônico?", "options": ["70", "40", "100", "50"],
+             "answer": "70"},
             {"question": "Qual o nome do avô de Saul?", "options": ["Quis", "Ner", "Cis", "Abiel"],
-                 "answer": "Abiel"},
-             {"question": "Quem foi o rei que chorou amargamente ao ser informado da destruição de Jerusalém?",
-                 "options": ["Ezequias", "Josias", "Manassés", "Zedequias"], "answer": "Josias"},
+             "answer": "Abiel"},
+            {"question": "Quem foi o rei que chorou amargamente ao ser informado da destruição de Jerusalém?",
+             "options": ["Ezequias", "Josias", "Manassés", "Zedequias"], "answer": "Josias"},
             {"question": "Quantas vezes o nome de Deus é mencionado no livro de Ester?",
-                 "options": ["0", "1", "5", "10"], "answer": "0"},
+             "options": ["0", "1", "5", "10"], "answer": "0"},
             {"question": "Quem foi o profeta que mandou dois de seus discípulos ungirem a Jeú como rei de Israel?",
-                 "options": ["Eliseu", "Elias", "Isaías", "Jeremias"], "answer": "Eliseu"},
+             "options": ["Eliseu", "Elias", "Isaías", "Jeremias"], "answer": "Eliseu"},
             {"question": "Quantos dias Jonas ficou no ventre do grande peixe?", "options": ["3", "2", "4", "7"],
-                 "answer": "3"},
+             "answer": "3"},
             {"question": "Qual o nome do pai de Davi?", "options": ["Jessé", "Saul", "Boaz", "Obede"],
-                 "answer": "Jessé"},
+             "answer": "Jessé"},
             {"question": "Qual o nome do rei que teve seu reino dividido após sua morte?",
-                 "options": ["Salomão", "Davi", "Saul", "Roboão"], "answer": "Salomão"},
+             "options": ["Salomão", "Davi", "Saul", "Roboão"], "answer": "Salomão"},
             {"question": "Quem foi o profeta que confrontou o rei Acabe e a rainha Jezabel?",
-                 "options": ["Elias", "Eliseu", "Isaías", "Jeremias"], "answer": "Elias"},
+             "options": ["Elias", "Eliseu", "Isaías", "Jeremias"], "answer": "Elias"},
             {"question": "Quantas vezes Pedro negou Jesus antes do galo cantar?", "options": ["3", "2", "4", "5"],
-                 "answer": "3"},
+             "answer": "3"},
             {"question": "Em qual cidade Paulo foi preso e depois escrevia cartas às igrejas?",
-                 "options": ["Roma", "Corinto", "Éfeso", "Filipos"], "answer": "Roma"},
+             "options": ["Roma", "Corinto", "Éfeso", "Filipos"], "answer": "Roma"},
             {"question": "Quem foi o primeiro discípulo a ser martirizado?",
-                 "options": ["Tiago", "Pedro", "Paulo", "João"], "answer": "Tiago"},
+             "options": ["Tiago", "Pedro", "Paulo", "João"], "answer": "Tiago"},
             {"question": "Qual o nome da esposa de Moisés?", "options": ["Zípora", "Raquel", "Sara", "Miriam"],
-                 "answer": "Zípora"},
+             "answer": "Zípora"},
             {"question": "Quantas vezes Jesus alimentou uma multidão com poucos pães e peixes?",
-                 "options": ["2", "1", "3", "4"], "answer": "2"}
-            ]
+             "options": ["2", "1", "3", "4"], "answer": "2"}
 
-        self.questions = []
+        ]
+
+        self.questions = [] #layout principal da tela do quiz
 
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
         self.score_label = Label(text="Pontuação: 0", font_size=24, size_hint=(1, 0.1), halign="right")
-        self.timer_label = Label(text=f"Tempo: {self.time_left}", font_size=24, size_hint=(1, 0.1), halign="center", color=(0, 1, 0, 1))
+        self.timer_label = Label(text=f"Tempo: {self.time_left}", font_size=24, size_hint=(1, 0.1), halign="center",
+                                 color=(0, 1, 0, 1))
         self.question_label = Label(font_size=20, markup=True, halign="center")
         self.progress_bar = ProgressBar(max=len(self.questions))
-        self.option_buttons = [Button(font_size=18, size_hint=(1, 0.4), background_color=(0, 0, 1, 1), color=(1, 1, 1, 1)) for _ in range(4)]
+
+        #botões de opções para as respostas
+        self.option_buttons = [
+            Button(font_size=18, size_hint=(1, 0.4), background_color=(0, 0, 1, 1), color=(1, 1, 1, 1)) for _ in
+            range(4)]
         for button in self.option_buttons:
             button.bind(on_press=self.check_answer)
 
+        #layout do botão de dicas
         hint_button_layout = BoxLayout(orientation='horizontal', size_hint=(1, None), height=40, padding=(10, 0))
-        self.hint_button = Button(text="🔍 Dica", font_size=18, size_hint=(None, None), size=(80, 40), background_color=(1, 1, 1, 1), pos_hint={'right': 1})
+        self.hint_button = Button(text="🔍 Dica", font_size=18, size_hint=(None, None), size=(80, 40),
+                                  background_color=(1, 1, 1, 1), pos_hint={'right': 1})
         self.hint_button.bind(on_press=self.show_hint)
         hint_button_layout.add_widget(self.hint_button)
 
-        self.hint_label = Label(text="", font_size=18, halign="center", valign="middle", color=(0.9, 0.9, 0.9, 1), size_hint=(1, None), text_size=(None, 40))
-
+        self.hint_label = Label(text="", font_size=18, halign="center", valign="middle", color=(0.9, 0.9, 0.9, 1),
+                                size_hint=(1, None), text_size=(None, 40))
+        # adicionar os widgets ao layout principal
         self.layout.add_widget(self.score_label)
         self.layout.add_widget(self.timer_label)
         self.layout.add_widget(self.progress_bar)
@@ -252,6 +357,7 @@ class QuizScreen(Screen):
         self.layout.add_widget(self.hint_label)
         self.add_widget(self.layout)
 
+    #define a dificuldade e embaralhar as perguntas
     def set_difficulty(self, difficulty):
         if difficulty == 'Fácil':
             self.questions = self.easy_questions
@@ -263,6 +369,7 @@ class QuizScreen(Screen):
         self.progress_bar.max = len(self.questions)
         self.update_question()
 
+    #autualizar as perguntas atual
     def update_question(self):
         if self.question_index < len(self.questions):
             question = self.questions[self.question_index]
@@ -276,6 +383,7 @@ class QuizScreen(Screen):
         else:
             self.manager.current = 'result'
 
+    #iniciar o temporizador
     def start_timer(self):
         if self.timer_event:
             self.timer_event.cancel()
@@ -284,7 +392,7 @@ class QuizScreen(Screen):
         self.timer_label.color = (0, 1, 0, 1)
         self.timer_event = Clock.schedule_interval(self.update_timer, 1)
 
-    def update_timer(self, dt):
+    def update_timer(self, dt):#atualizar o temporizador a cada segundo
         self.time_left -= 1
         if self.time_left <= 19:
             self.timer_label.color = (1, 1, 0, 1)
@@ -295,7 +403,7 @@ class QuizScreen(Screen):
             self.timer_event.cancel()
             self.next_question(None)
 
-    def check_answer(self, instance):
+    def check_answer(self, instance):# Verifica a resposta do usuário e atualiza a pontuação
         correct_answer = self.questions[self.question_index]["answer"]
         if instance.text == correct_answer:
             self.animate_correct_answer(instance)
@@ -306,22 +414,22 @@ class QuizScreen(Screen):
             self.animate_vibration(instance)
         Clock.schedule_once(self.next_question, 0.5)
 
-    def animate_correct_answer(self, button):
+    def animate_correct_answer(self, button):# animar o botão da resposta correta
         anim = Animation(background_color=(1, 1, 0, 1), duration=0.1) + \
                Animation(background_color=(0.1, 0.8, 0.1, 1), duration=0.1) + \
                Animation(background_color=(1, 1, 0, 1), duration=0.1) + \
                Animation(background_color=(0.1, 0.8, 0.1, 1), duration=0.1)
         anim.start(button)
 
-    def animate_vibration(self, button):
+    def animate_vibration(self, button): #animar o botão da resposta errada
         anim = Animation(x=-10, duration=0.1) + Animation(x=10, duration=0.1) + Animation(x=0, duration=0.1)
         anim.start(button)
 
-    def next_question(self, dt):
+    def next_question(self, dt):#avançar para proxima pergunta
         self.question_index += 1
         self.update_question()
 
-    def show_hint(self, instance):
+    def show_hint(self, instance):#mostra uma dica para a pergunta atual
         if self.hint_used < 2:
             hint = self.questions[self.question_index]["answer"]
             self.hint_label.text = f"Dica: {hint}"
@@ -332,8 +440,17 @@ class QuizScreen(Screen):
         else:
             self.hint_label.text = "Você usou todas as dicas!"
 
-    def remove_hint(self, dt):
+    def remove_hint(self, dt):#remove dicas após um tempo
         self.hint_label.text = ""
+
+    def on_enter(self):
+         # Zera a pontuação e outras variáveis relevantes
+        self.score = 0
+        self.question_index = 0
+        self.hint_used = 0
+        self.score_label.text = "Pontuação: 0"
+        self.update_question()
+
 
 class ResultScreen(Screen):
     def __init__(self, **kwargs):
@@ -344,22 +461,26 @@ class ResultScreen(Screen):
             text="Recomeçar",
             font_size=24,
             size_hint=(1, 0.3),
-            background_color=((0,0,1, 1))
+            background_color=((0, 0, 1, 1))
         )
         restart_button.bind(on_press=self.restart_quiz)
         self.layout.add_widget(self.result_label)
         self.layout.add_widget(restart_button)
         self.add_widget(self.layout)
 
+    # Atualiza o texto do resultado com base na pontuação do usuário quando a tela é exibida
     def on_enter(self):
+
         quiz_screen = self.manager.get_screen('quiz')
         score = quiz_screen.score
         total_questions = len(quiz_screen.questions)
-        if score >= 15:
-            self.result_label.text = f"[b][color=#00FF00]Parabéns! Você acertou {score} de {total_questions} perguntas![/color][/b]"
+        percentage = (score / total_questions) * 100 #porcentagem
+        if score >= 15: # se as respostas for acima de 15 voce receberá uma mensagem na tela parabens se nao for receberá recebera tente novamente
+            self.result_label.text = f"[b][color=#00FF00]Parabéns! Você acertou {score} de {total_questions} perguntas![/color][/b]\n[b][color=#00FF00]Porcentagem de acertos: {percentage:.2f}%[/color][/b]"
         else:
-            self.result_label.text = f"[b][color=#FF0000] Você acertou {score} de {total_questions} perguntas. Tente na próxima vez![/color][/b]"
+            self.result_label.text = f"[b][color=#FF0000]Você acertou {score} de {total_questions} perguntas. Tente na próxima vez![/color][/b]\n[b][color=#FF0000]Porcentagem de acertos: {percentage:.2f}%[/color][/b]"
 
+    #reinicia o quiz e volta para a tela inicial
     def restart_quiz(self, instance):
         quiz_screen = self.manager.get_screen('quiz')
         quiz_screen.score = 0
@@ -368,6 +489,7 @@ class ResultScreen(Screen):
         quiz_screen.update_question()
         self.manager.current = 'start'
 
+ #classe principal do aplicativo que gerencia  as telas
 class QuizApp(App):
     def build(self):
         sm = ScreenManager(transition=FadeTransition())
@@ -376,5 +498,7 @@ class QuizApp(App):
         sm.add_widget(ResultScreen(name='result'))
         return sm
 
+
 if __name__ == '__main__':
     QuizApp().run()
+
