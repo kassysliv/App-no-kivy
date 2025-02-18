@@ -9,13 +9,12 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 import random
 
-
-class StartScreen(Screen): # Tela inicial onde o usuário seleciona a dificuldade e começa o quiz
+class StartScreen(Screen):  # Tela inicial onde o usuário seleciona a dificuldade e começa o quiz
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         layout = BoxLayout(orientation='vertical', padding=20, spacing=20)
 
-        title = Label( #titulo
+        title = Label(  # titulo
             text="[b]Bem-vindo ao Quiz Bíblico![/color][/b]",
             font_size=32,
             markup=True,
@@ -23,21 +22,21 @@ class StartScreen(Screen): # Tela inicial onde o usuário seleciona a dificuldad
             color=(1, 1, 1, 1)
         )
 
-        subtitle = Label( #subtítulo
+        subtitle = Label(  # subtítulo
             text="[i]Teste seus conhecimentos sobre a Bíblia![/i]",
             font_size=18,
             markup=True,
             color=(1, 1, 1, 1)
         )
 
-        self.difficulty_spinner = Spinner( # spinner para selecionar a dificuldade, o usuário que escolhe
+        self.difficulty_spinner = Spinner(  # spinner para selecionar a dificuldade, o usuário que escolhe
             text='Selecione a dificuldade',
             values=('Fácil', 'Médio', 'Difícil'),
             size_hint=(1, 0.3),
             background_color=(0, 0, 1, 1)
         )
 
-        start_button = Button( # botão para começar o quiz
+        start_button = Button(  # botão para começar o quiz
             text="Começar",
             font_size=24,
             size_hint=(1, 0.3),
@@ -45,20 +44,19 @@ class StartScreen(Screen): # Tela inicial onde o usuário seleciona a dificuldad
         )
         start_button.bind(on_press=self.start_quiz)
 
-        layout.add_widget(title) #adicionar os widgets ao layout
+        layout.add_widget(title)  # adicionar os widgets ao layout
         layout.add_widget(subtitle)
         layout.add_widget(self.difficulty_spinner)
         layout.add_widget(start_button)
         self.add_widget(layout)
 
-    def start_quiz(self, instance): #função chamada quando o botão começar
-        selected_difficulty = self.difficulty_spinner.text#starquiz e um botão chamado de começar
+    def start_quiz(self, instance):  # função chamada quando o botão começar
+        selected_difficulty = self.difficulty_spinner.text  # starquiz e um botão chamado de começar
         if selected_difficulty != 'Selecione a dificuldade':
             self.manager.current = 'quiz'
             self.manager.get_screen('quiz').set_difficulty(selected_difficulty)
 
-
-class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde ás perguntas do quiz.
+class QuizScreen(Screen):  # tela aonde o quiz acontece, aonde o usuário responde ás perguntas do quiz.
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.score = 0
@@ -67,7 +65,7 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
         self.timer_event = None
         self.hint_used = 0
 
-        self.easy_questions = [ #perguntas fáceis
+        self.easy_questions = [  # perguntas fáceis
             {"question": "Quantos dias Deus levou para criar o mundo?", "options": ["3", "5", "6", "7"], "answer": "6"},
             {"question": "Quem construiu a arca para salvar sua família e os animais do dilúvio?",
              "options": ["Adão", "Moisés", "Noé", "Abraão"], "answer": "Noé"},
@@ -128,7 +126,7 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
 
         ]
 
-        self.medium_questions = [ #perguntas médias
+        self.medium_questions = [  # perguntas médias
             {"question": "Qual discípulo escreveu o Livro de Apocalipse?",
              "options": ["Paulo", "João", "Mateus", "Lucas"], "answer": "João"},
             {"question": "Qual é o maior mandamento segundo Jesus?",
@@ -256,7 +254,7 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
 
         ]
 
-        self.hard_questions = [ #perguntas difíceis
+        self.hard_questions = [  # perguntas difíceis
             {"question": "Qual foi o nome do homem que ajudou Jesus a carregar a cruz?",
              "options": ["Simão de Cirene", "José de Arimateia", "Nicodemos", "Pedro"], "answer": "Simão de Cirene"},
             {"question": "Quantos salmos são atribuídos a Davi?", "options": ["73", "100", "50", "150"],
@@ -281,8 +279,8 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
             {"question": "Qual foi o nome do homem que substituiu Judas Iscariotes como apóstolo?",
              "options": ["Matias", "Barnabé", "Silas", "Timóteo"], "answer": "Matias"},
             {"question": "Qual foi o nome da mãe de Samuel, o profeta?",
-            "options": ["Ana", "Maria", "Sara", "Rebeca"],
-            "answer": "Ana"},
+             "options": ["Ana", "Maria", "Sara", "Rebeca"],
+             "answer": "Ana"},
             {"question": "Qual é o versículo mais longo da Bíblia?",
              "options": ["Ester 8:9", "Salmos 119:1", "Gênesis 1:1", "João 3:16"], "answer": "Ester 8:9"},
             {"question": "Quantos capítulos existem no livro de Isaías?", "options": ["50", "66", "72", "40"],
@@ -319,9 +317,9 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
             {"question": "Quantas vezes Jesus alimentou uma multidão com poucos pães e peixes?",
              "options": ["2", "1", "3", "4"], "answer": "2"}
 
-        ]
+    ]
 
-        self.questions = [] #layout principal da tela do quiz
+        self.questions = []  # layout principal da tela do quiz
 
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
         self.score_label = Label(text="Pontuação: 0", font_size=24, size_hint=(1, 0.1), halign="right")
@@ -330,14 +328,14 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
         self.question_label = Label(font_size=20, markup=True, halign="center")
         self.progress_bar = ProgressBar(max=len(self.questions))
 
-        #botões de opções para as respostas
+        # botões de opções para as respostas
         self.option_buttons = [
             Button(font_size=18, size_hint=(1, 0.4), background_color=(0, 0, 1, 1), color=(1, 1, 1, 1)) for _ in
             range(4)]
         for button in self.option_buttons:
             button.bind(on_press=self.check_answer)
 
-        #layout do botão de dicas
+        # layout do botão de dicas
         hint_button_layout = BoxLayout(orientation='horizontal', size_hint=(1, None), height=40, padding=(10, 0))
         self.hint_button = Button(text="🔍 Dica", font_size=18, size_hint=(None, None), size=(80, 40),
                                   background_color=(1, 1, 1, 1), pos_hint={'right': 1})
@@ -357,19 +355,23 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
         self.layout.add_widget(self.hint_label)
         self.add_widget(self.layout)
 
-    #define a dificuldade e embaralhar as perguntas
+    # define a dificuldade e embaralhar as perguntas
     def set_difficulty(self, difficulty):
         if difficulty == 'Fácil':
-            self.questions = self.easy_questions
+            self.questions = self.select_questions(self.easy_questions)
         elif difficulty == 'Médio':
-            self.questions = self.medium_questions
+            self.questions = self.select_questions(self.medium_questions)
         elif difficulty == 'Difícil':
-            self.questions = self.hard_questions
+            self.questions = self.select_questions(self.hard_questions)
         random.shuffle(self.questions)  # Embaralha as perguntas
         self.progress_bar.max = len(self.questions)
         self.update_question()
 
-    #autualizar as perguntas atual
+    # selecionar 10 perguntas aleatórias
+    def select_questions(self, question_pool):
+        return random.sample(question_pool, min(10, len(question_pool)))
+
+    # atualizar as perguntas atuais
     def update_question(self):
         if self.question_index < len(self.questions):
             question = self.questions[self.question_index]
@@ -383,7 +385,7 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
         else:
             self.manager.current = 'result'
 
-    #iniciar o temporizador
+    # iniciar o temporizador
     def start_timer(self):
         if self.timer_event:
             self.timer_event.cancel()
@@ -392,7 +394,7 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
         self.timer_label.color = (0, 1, 0, 1)
         self.timer_event = Clock.schedule_interval(self.update_timer, 1)
 
-    def update_timer(self, dt):#atualizar o temporizador a cada segundo
+    def update_timer(self, dt):  # atualizar o temporizador a cada segundo
         self.time_left -= 1
         if self.time_left <= 19:
             self.timer_label.color = (1, 1, 0, 1)
@@ -403,7 +405,7 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
             self.timer_event.cancel()
             self.next_question(None)
 
-    def check_answer(self, instance):# Verifica a resposta do usuário e atualiza a pontuação
+    def check_answer(self, instance):  # Verifica a resposta do usuário e atualiza a pontuação
         correct_answer = self.questions[self.question_index]["answer"]
         if instance.text == correct_answer:
             self.animate_correct_answer(instance)
@@ -414,22 +416,22 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
             self.animate_vibration(instance)
         Clock.schedule_once(self.next_question, 0.5)
 
-    def animate_correct_answer(self, button):# animar o botão da resposta correta
+    def animate_correct_answer(self, button):  # animar o botão da resposta correta
         anim = Animation(background_color=(1, 1, 0, 1), duration=0.1) + \
                Animation(background_color=(0.1, 0.8, 0.1, 1), duration=0.1) + \
                Animation(background_color=(1, 1, 0, 1), duration=0.1) + \
                Animation(background_color=(0.1, 0.8, 0.1, 1), duration=0.1)
         anim.start(button)
 
-    def animate_vibration(self, button): #animar o botão da resposta errada
+    def animate_vibration(self, button):  # animar o botão da resposta errada
         anim = Animation(x=-10, duration=0.1) + Animation(x=10, duration=0.1) + Animation(x=0, duration=0.1)
         anim.start(button)
 
-    def next_question(self, dt):#avançar para proxima pergunta
+    def next_question(self, dt):  # avançar para a próxima pergunta
         self.question_index += 1
         self.update_question()
 
-    def show_hint(self, instance):#mostra uma dica para a pergunta atual
+    def show_hint(self, instance):  # mostra uma dica para a pergunta atual
         if self.hint_used < 2:
             hint = self.questions[self.question_index]["answer"]
             self.hint_label.text = f"Dica: {hint}"
@@ -440,17 +442,16 @@ class QuizScreen(Screen): #tela aonde o quiz acontece, aonde o usuário responde
         else:
             self.hint_label.text = "Você usou todas as dicas!"
 
-    def remove_hint(self, dt):#remove dicas após um tempo
+    def remove_hint(self, dt):  # remove dicas após um tempo
         self.hint_label.text = ""
 
     def on_enter(self):
-         # Zera a pontuação e outras variáveis relevantes
+        # Zera a pontuação e outras variáveis relevantes
         self.score = 0
         self.question_index = 0
         self.hint_used = 0
         self.score_label.text = "Pontuação: 0"
         self.update_question()
-
 
 class ResultScreen(Screen):
     def __init__(self, **kwargs):
@@ -470,17 +471,16 @@ class ResultScreen(Screen):
 
     # Atualiza o texto do resultado com base na pontuação do usuário quando a tela é exibida
     def on_enter(self):
-
         quiz_screen = self.manager.get_screen('quiz')
         score = quiz_screen.score
         total_questions = len(quiz_screen.questions)
-        percentage = (score / total_questions) * 100 #porcentagem
-        if score >= 15: # se as respostas for acima de 15 voce receberá uma mensagem na tela parabens se nao for receberá recebera tente novamente
+        percentage = (score / total_questions) * 100  # porcentagem
+        if score >= 7:  # se as respostas forem acima de 7, você receberá uma mensagem na tela parabéns, se não for, receberá tente novamente
             self.result_label.text = f"[b][color=#00FF00]Parabéns! Você acertou {score} de {total_questions} perguntas![/color][/b]\n[b][color=#00FF00]Porcentagem de acertos: {percentage:.2f}%[/color][/b]"
         else:
             self.result_label.text = f"[b][color=#FF0000]Você acertou {score} de {total_questions} perguntas. Tente na próxima vez![/color][/b]\n[b][color=#FF0000]Porcentagem de acertos: {percentage:.2f}%[/color][/b]"
 
-    #reinicia o quiz e volta para a tela inicial
+    # reinicia o quiz e volta para a tela inicial
     def restart_quiz(self, instance):
         quiz_screen = self.manager.get_screen('quiz')
         quiz_screen.score = 0
@@ -489,7 +489,7 @@ class ResultScreen(Screen):
         quiz_screen.update_question()
         self.manager.current = 'start'
 
- #classe principal do aplicativo que gerencia  as telas
+# classe principal do aplicativo que gerencia as telas
 class QuizApp(App):
     def build(self):
         sm = ScreenManager(transition=FadeTransition())
@@ -498,7 +498,5 @@ class QuizApp(App):
         sm.add_widget(ResultScreen(name='result'))
         return sm
 
-
 if __name__ == '__main__':
     QuizApp().run()
-
